@@ -86,6 +86,22 @@ module Auth0
         post('/oauth/token', request_params)
       end
 
+      def login_with_default_directory_realm(username, password, audience = nil, realm = nil, scope = 'openid')
+        raise Auth0::InvalidParameter, 'Must supply a valid username' if username.to_s.empty?
+        raise Auth0::InvalidParameter, 'Must supply a valid password' if password.to_s.empty?
+        request_params = {
+          grant_type:    'http://auth0.com/oauth/grant-type/password-realm',
+          username:      username,
+          password:      password,
+          audience:      audience,
+          client_id:     @client_id,
+          client_secret: @client_secret,
+          scope:         scope,
+          realm:         realm
+        }
+        post('/oauth/token', request_params)
+      end
+
       # Signup using username/password
       # @see https://auth0.com/docs/auth-api#!#post--dbconnections-signup
       # @param email [string] User email
