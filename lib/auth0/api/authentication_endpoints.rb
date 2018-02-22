@@ -65,7 +65,8 @@ module Auth0
           connection:    connection_name,
           grant_type:    options.fetch(:grant_type, 'password'),
           id_token:      id_token,
-          device:        options.fetch(:device, nil)
+          device:        options.fetch(:device, nil),
+          realm:         options.fetch(:realm, nil)
         }
         post('/oauth/token', request_params)
       end
