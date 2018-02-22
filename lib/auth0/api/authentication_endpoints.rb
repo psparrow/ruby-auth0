@@ -71,6 +71,21 @@ module Auth0
         post('/oauth/token', request_params)
       end
 
+      def login_with_default_directory(username, password, audience = nil, scope = 'openid')
+        raise Auth0::InvalidParameter, 'Must supply a valid username' if username.to_s.empty?
+        raise Auth0::InvalidParameter, 'Must supply a valid password' if password.to_s.empty?
+        request_params = {
+          grant_type:    'password',
+          username:      username,
+          password:      password,
+          audience:      audience,
+          client_id:     @client_id,
+          client_secret: @client_secret,
+          scope:         scope
+        }
+        post('/oauth/token', request_params)
+      end
+
       # Signup using username/password
       # @see https://auth0.com/docs/auth-api#!#post--dbconnections-signup
       # @param email [string] User email
