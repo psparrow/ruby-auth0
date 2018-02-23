@@ -71,35 +71,25 @@ module Auth0
         post('/oauth/token', request_params)
       end
 
-      def login_with_default_directory(username, password, audience = nil, scope = 'openid')
+      # Logins using username/password
+      # @see https://auth0.com/docs/auth-api#!#post--oauth-ro
+      # @param username [string] Username
+      # @param password [string] User's password
+      # Active Directory/LDAP, Windows Azure AD and ADF
+      # @return [json] Returns the access token and id token
+      def login_with_legacy_endpoint(username, password)
         raise Auth0::InvalidParameter, 'Must supply a valid username' if username.to_s.empty?
         raise Auth0::InvalidParameter, 'Must supply a valid password' if password.to_s.empty?
+        
         request_params = {
+          client_id:     @client_id,
+          username:      username,
+          password:      password,
+          connection:      UP_AUTH,
           grant_type:    'password',
-          username:      username,
-          password:      password,
-          audience:      audience,
-          client_id:     @client_id,
-          client_secret: @client_secret,
-          scope:         scope
+          scope:         'openid'
         }
-        post('/oauth/token', request_params)
-      end
-
-      def login_with_default_directory_realm(username, password, audience = nil, realm = nil, scope = 'openid')
-        raise Auth0::InvalidParameter, 'Must supply a valid username' if username.to_s.empty?
-        raise Auth0::InvalidParameter, 'Must supply a valid password' if password.to_s.empty?
-        request_params = {
-          grant_type:    'http://auth0.com/oauth/grant-type/password-realm',
-          username:      username,
-          password:      password,
-          audience:      audience,
-          client_id:     @client_id,
-          client_secret: @client_secret,
-          scope:         scope,
-          realm:         realm
-        }
-        post('/oauth/token', request_params)
+        post('/oauth/ro', request_params)
       end
 
       # Signup using username/password
